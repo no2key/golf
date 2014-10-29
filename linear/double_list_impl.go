@@ -1,6 +1,10 @@
 // double_list_impl
 package linear
 
+func NewDoubleLinkedList() DLList {
+	return new(dLList)
+}
+
 type dLListNode struct {
 	next  *dLListNode
 	prev  *dLListNode

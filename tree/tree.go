@@ -3,6 +3,7 @@ package tree
 
 import (
 	"fmt"
+
 	"github.com/wdsgyj/golf/linear"
 )
 
@@ -134,6 +135,7 @@ func (this *Tree) Remove(n *Node) {
 	n.clear()
 }
 
+// 广度优先遍历非递归版本
 func (this *Tree) Interator(fn func(interface{})) {
 	if this.root == nil {
 		return
@@ -169,16 +171,28 @@ func (this *Tree) internalInteratorRecursive(n *Node, fn func(interface{})) {
 	}
 }
 
+// 深度优先遍历非递归版本
 func (this *Tree) interatorDeep(fn func(interface{})) {
-	que := linear.NewStack()
-	que.Add(this.root)
-	for !que.IsEmpty() {
-		node := que.Remove().(*Node)
+	if this.root == nil {
+		return
+	}
+
+	stack := linear.NewStack()
+	var node *Node
+
+	stack.Add(this.root)
+	for !stack.IsEmpty() {
+		node = stack.Remove().(*Node)
 		if node == nil {
 			continue
 		}
 
 		fn(node.Value)
 
+		// 添加兄弟节点
+		stack.Add(node.brother)
+
+		// 添加子女节点
+		stack.Add(node.child)
 	}
 }
