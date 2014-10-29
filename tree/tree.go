@@ -3,7 +3,7 @@ package tree
 
 import (
 	"fmt"
-	list "github.com/wdsgyj/golf/linear"
+	"github.com/wdsgyj/golf/linear"
 )
 
 type Node struct {
@@ -139,7 +139,7 @@ func (this *Tree) Interator(fn func(interface{})) {
 		return
 	}
 
-	que := list.NewQueue()
+	que := linear.NewQueue()
 	que.Add(this.root)
 	var node *Node
 
@@ -149,5 +149,36 @@ func (this *Tree) Interator(fn func(interface{})) {
 		for n := node.child; n != nil; n = n.brother {
 			que.Add(n)
 		}
+	}
+}
+
+// 深度优先遍历递归版本
+func (this *Tree) interatorDeepRecursive(fn func(interface{})) {
+	this.internalInteratorRecursive(this.root, fn)
+}
+
+func (this *Tree) internalInteratorRecursive(n *Node, fn func(interface{})) {
+	if n == nil {
+		return
+	}
+
+	fn(n.Value)
+
+	for node := n.child; node != nil; node = node.brother {
+		this.internalInteratorRecursive(node, fn)
+	}
+}
+
+func (this *Tree) interatorDeep(fn func(interface{})) {
+	que := linear.NewStack()
+	que.Add(this.root)
+	for !que.IsEmpty() {
+		node := que.Remove().(*Node)
+		if node == nil {
+			continue
+		}
+
+		fn(node.Value)
+
 	}
 }

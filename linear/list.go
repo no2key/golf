@@ -1,4 +1,4 @@
-package list
+package linear
 
 type List interface {
 	Add(v interface{})

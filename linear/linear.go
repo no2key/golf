@@ -1,4 +1,4 @@
-package list
+package linear
 
 type Linear interface {
 	IsEmpty() bool

@@ -1,4 +1,4 @@
-package list
+package linear
 
 func NewVector() List {
 	return newVector()
@@ -195,7 +195,15 @@ func (this *vector) ToSlice(s []interface{}) []interface{} {
 		return nil
 	}
 
-	rs := make([]interface{}, this.pt)
+	var rs []interface{}
+	if len(s) >= this.pt {
+		rs = s
+	} else if cap(s) >= this.pt {
+		rs = s[:this.pt]
+	} else {
+		rs = make([]interface{}, this.pt)
+	}
+
 	for i := 0; i < this.pt; i++ {
 		rs[i] = this.base[i]
 	}
