@@ -2,10 +2,13 @@
 package tree
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/wdsgyj/golf/linear"
 )
+
+var jumpSignal = errors.New("跳出递归时需要")
 
 type Node struct {
 	parent     *Node
@@ -136,7 +139,7 @@ func (this *Tree) Remove(n *Node) {
 }
 
 // 广度优先遍历非递归版本
-func (this *Tree) Interator(fn func(interface{})) {
+func (this *Tree) Interator(fn func(interface{}) bool) {
 	if this.root == nil {
 		return
 	}
@@ -147,7 +150,9 @@ func (this *Tree) Interator(fn func(interface{})) {
 
 	for !que.IsEmpty() {
 		node = que.Remove().(*Node)
-		fn(node.Value)
+		if !fn(node.Value) {
+			break
+		}
 		for n := node.child; n != nil; n = n.brother {
 			que.Add(n)
 		}
@@ -155,16 +160,24 @@ func (this *Tree) Interator(fn func(interface{})) {
 }
 
 // 深度优先遍历递归版本
-func (this *Tree) interatorDeepRecursive(fn func(interface{})) {
+func (this *Tree) interatorDeepRecursive(fn func(interface{}) bool) {
+	defer func() {
+		tr := recover() // 如果没有异常这里应该返回 nil
+		if tr != nil && tr != jumpSignal {
+			panic(tr) // 如果不是跳出递归时抛出的，这里继续向上抛
+		}
+	}()
 	this.internalInteratorRecursive(this.root, fn)
 }
 
-func (this *Tree) internalInteratorRecursive(n *Node, fn func(interface{})) {
+func (this *Tree) internalInteratorRecursive(n *Node, fn func(interface{}) bool) {
 	if n == nil {
 		return
 	}
 
-	fn(n.Value)
+	if !fn(n.Value) {
+		panic(jumpSignal) // TODO 跳出递归的方式非得使用 panic 吗？
+	}
 
 	for node := n.child; node != nil; node = node.brother {
 		this.internalInteratorRecursive(node, fn)
@@ -172,7 +185,7 @@ func (this *Tree) internalInteratorRecursive(n *Node, fn func(interface{})) {
 }
 
 // 深度优先遍历非递归版本
-func (this *Tree) interatorDeep(fn func(interface{})) {
+func (this *Tree) interatorDeep(fn func(interface{}) bool) {
 	if this.root == nil {
 		return
 	}
@@ -187,7 +200,9 @@ func (this *Tree) interatorDeep(fn func(interface{})) {
 			continue
 		}
 
-		fn(node.Value)
+		if !fn(node.Value) {
+			break
+		}
 
 		// 添加兄弟节点
 		stack.Add(node.brother)
