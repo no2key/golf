@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func NewStack() Linear {
+func NewStack() SLList {
 	return new(stack)
 }
 
@@ -65,15 +65,17 @@ func (this *stack) Peek() interface{} {
 	return this.pt.elem
 }
 
-func (this *stack) Iterator(fn func(interface{})) {
+func (this *stack) Iterator(fn func(interface{}) bool) {
 	if this.size > 0 {
 		for node := this.pt; node != nil; node = node.prev {
-			fn(node.elem)
+			if !fn(node.elem) {
+				break
+			}
 		}
 	}
 }
 
-func (this *stack) ReverseIterator(fn func(interface{})) {
+func (this *stack) ReverseIterator(fn func(interface{}) bool) {
 	if this.size > 0 {
 		nodeSlice := make([]interface{}, this.size)
 		for node, i := this.pt, this.size-1; node != nil && i >= 0; node, i = node.prev, i-1 {
@@ -81,7 +83,9 @@ func (this *stack) ReverseIterator(fn func(interface{})) {
 		}
 
 		for _, v := range nodeSlice {
-			fn(v)
+			if !fn(v) {
+				break
+			}
 		}
 	}
 }

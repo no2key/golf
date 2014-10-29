@@ -1,9 +1,12 @@
 // linked_list
 package linear
 
-type LinkedList interface {
+type DLList interface {
 	AddTail(v interface{})
 	AddHead(v interface{})
+
+	PeekTail() interface{}
+	PeekHead() interface{}
 
 	RemoveTail() interface{}
 	RemoveHead() interface{}
@@ -17,7 +20,7 @@ type LinkedList interface {
 	IndexOf(v interface{}) int
 	LastIndexOf(v interface{}) int
 
-	Sub(start, end int) (LinkedList, error)
+	Sub(start, end int) (DLList, error)
 
 	ToSlice(s []interface{}) []interface{}
 }

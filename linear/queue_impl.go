@@ -1,7 +1,7 @@
 // queue_impl
 package linear
 
-func NewQueue() Linear {
+func NewQueue() SLList {
 	return newQueue()
 }
 
@@ -74,17 +74,19 @@ func (this *queue) Peek() interface{} {
 	}
 }
 
-func (this *queue) Iterator(fn func(interface{})) {
+func (this *queue) Iterator(fn func(interface{}) bool) {
 	if this.size == 0 {
 		return
 	}
 
 	for node := this.head; node != nil; node = node.next {
-		fn(node.value)
+		if !fn(node.value) {
+			break
+		}
 	}
 }
 
-func (this *queue) ReverseIterator(fn func(interface{})) {
+func (this *queue) ReverseIterator(fn func(interface{}) bool) {
 	if this.size == 0 {
 		return
 	}
@@ -95,6 +97,8 @@ func (this *queue) ReverseIterator(fn func(interface{})) {
 	}
 
 	for _, v := range s {
-		fn(v)
+		if !fn(v) {
+			break
+		}
 	}
 }

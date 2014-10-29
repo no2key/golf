@@ -1,10 +1,10 @@
 package linear
 
-func NewVector() List {
+func NewVector() RAList {
 	return newVector()
 }
 
-func NewSizedVector(size int) List {
+func NewSizedVector(size int) RAList {
 	return newSizedVector(size)
 }
 
@@ -177,7 +177,7 @@ func (this *vector) LastIndexOf(v interface{}) int {
 	return index
 }
 
-func (this *vector) Sub(start, end int) (List, error) {
+func (this *vector) Sub(start, end int) (RAList, error) {
 	if start < 0 || start > end || end > this.pt {
 		return nil, IndexOutOfBounds
 	}

@@ -1,6 +1,6 @@
 package linear
 
-type List interface {
+type RAList interface {
 	Add(v interface{})
 	AddTo(i int, v interface{}) error
 
@@ -19,7 +19,7 @@ type List interface {
 	IndexOf(v interface{}) int
 	LastIndexOf(v interface{}) int
 
-	Sub(start, end int) (List, error)
+	Sub(start, end int) (RAList, error)
 
 	ToSlice(s []interface{}) []interface{}
 }
