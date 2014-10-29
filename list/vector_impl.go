@@ -12,6 +12,16 @@ func newVector() *vector {
 	return vector
 }
 
+func newSizedVector(size int) *vector {
+	if size < 16 {
+		size = 16
+	}
+	vector := new(vector)
+	vector.base = make([]interface{}, size)
+	vector.pt = 0
+	return vector
+}
+
 func (this *vector) Add(v interface{}) {
 	size := len(this.base)
 	if this.pt == size {
@@ -166,11 +176,7 @@ func (this *vector) Sub(start, end int) (List, error) {
 	rs := newVector()
 	rs.pt = end - start
 	if rs.pt != 0 {
-		size := len(rs.base)
-		for rs.pt > size {
-			size *= 2
-		}
-		rs.base = make([]interface{}, size)
+		rs.base = make([]interface{}, rs.pt)
 		copy(rs.base, this.base[start:end])
 	}
 	return rs, nil

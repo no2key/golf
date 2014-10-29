@@ -33,3 +33,7 @@ var IndexOutOfBounds = errors.New("index out of bounds")
 func NewVector() List {
 	return newVector()
 }
+
+func NewSizedVector(size int) List {
+	return newSizedVector(size)
+}
