@@ -74,6 +74,17 @@ func (this *queue) Peek() interface{} {
 	}
 }
 
+func (this *queue) Contains(v interface{}) bool {
+	rs := false
+	for node := this.head; node != nil; node = node.next {
+		if node.value == v {
+			rs = true
+			break
+		}
+	}
+	return rs
+}
+
 func (this *queue) Iterator(fn func(interface{}) bool) {
 	if this.size == 0 {
 		return

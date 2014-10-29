@@ -65,6 +65,17 @@ func (this *stack) Peek() interface{} {
 	return this.pt.elem
 }
 
+func (this *stack) Contains(v interface{}) bool {
+	rs := false
+	for node := this.pt; node != nil; node = node.prev {
+		if node.elem == v {
+			rs = true
+			break
+		}
+	}
+	return rs
+}
+
 func (this *stack) Iterator(fn func(interface{}) bool) {
 	if this.size > 0 {
 		for node := this.pt; node != nil; node = node.prev {
