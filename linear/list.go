@@ -1,9 +1,5 @@
 package list
 
-import (
-	"errors"
-)
-
 type List interface {
 	Add(v interface{})
 	AddTo(i int, v interface{}) error
@@ -26,14 +22,4 @@ type List interface {
 	Sub(start, end int) (List, error)
 
 	ToSlice(s []interface{}) []interface{}
-}
-
-var IndexOutOfBounds = errors.New("index out of bounds")
-
-func NewVector() List {
-	return newVector()
-}
-
-func NewSizedVector(size int) List {
-	return newSizedVector(size)
 }

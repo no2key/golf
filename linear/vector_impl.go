@@ -1,5 +1,13 @@
 package list
 
+func NewVector() List {
+	return newVector()
+}
+
+func NewSizedVector(size int) List {
+	return newSizedVector(size)
+}
+
 type vector struct {
 	base []interface{}
 	pt   int

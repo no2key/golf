@@ -1,12 +1,21 @@
-package stack
+package list
 
-type node struct {
-	prev *node
+import (
+	"bytes"
+	"fmt"
+)
+
+func NewStack() Linear {
+	return new(stack)
+}
+
+type stackNode struct {
+	prev *stackNode
 	elem interface{}
 }
 
 type stack struct {
-	pt   *node
+	pt   *stackNode
 	size int
 }
 
@@ -18,12 +27,17 @@ func (this *stack) Size() int {
 	return this.size
 }
 
-func (this *stack) Push(v interface{}) {
+func (this *stack) Clear() {
+	this.pt = nil
+	this.size = 0
+}
+
+func (this *stack) Add(v interface{}) {
 	if this.pt == nil {
-		this.pt = new(node)
+		this.pt = new(stackNode)
 		this.pt.elem = v
 	} else {
-		newNode := new(node)
+		newNode := new(stackNode)
 		newNode.prev = this.pt
 		newNode.elem = v
 		this.pt = newNode
@@ -32,7 +46,7 @@ func (this *stack) Push(v interface{}) {
 	this.size++
 }
 
-func (this *stack) Pop() interface{} {
+func (this *stack) Remove() interface{} {
 	if this.size == 0 {
 		return nil
 	}
@@ -41,6 +55,14 @@ func (this *stack) Pop() interface{} {
 	this.pt = this.pt.prev
 	this.size--
 	return rs.elem
+}
+
+func (this *stack) Peek() interface{} {
+	if this.size == 0 {
+		return nil
+	}
+
+	return this.pt.elem
 }
 
 func (this *stack) Iterator(fn func(interface{})) {
@@ -58,8 +80,21 @@ func (this *stack) ReverseIterator(fn func(interface{})) {
 			nodeSlice[i] = node.elem
 		}
 
-		for _, elem := range nodeSlice {
-			fn(elem)
+		for _, v := range nodeSlice {
+			fn(v)
 		}
 	}
+}
+
+func (this *stack) String() string {
+	buf := bytes.NewBuffer(nil)
+	buf.WriteString("stack [")
+	for node, i := this.pt, 0; node != nil; node, i = node.prev, i+1 {
+		if i != 0 {
+			buf.WriteString(", ")
+		}
+		buf.WriteString(fmt.Sprintf("%v", node.elem))
+	}
+	buf.WriteString("]")
+	return buf.String()
 }
