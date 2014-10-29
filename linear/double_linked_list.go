@@ -17,10 +17,6 @@ type DLList interface {
 
 	Contains(v interface{}) bool
 
-	IndexOf(v interface{}) int
-	LastIndexOf(v interface{}) int
-
-	Sub(start, end int) (DLList, error)
-
-	ToSlice(s []interface{}) []interface{}
+	Iterator(fn func(interface{}) bool)
+	ReverseIterator(fn func(interface{}) bool)
 }

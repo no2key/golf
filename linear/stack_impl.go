@@ -77,11 +77,9 @@ func (this *stack) Contains(v interface{}) bool {
 }
 
 func (this *stack) Iterator(fn func(interface{}) bool) {
-	if this.size > 0 {
-		for node := this.pt; node != nil; node = node.prev {
-			if !fn(node.elem) {
-				break
-			}
+	for node := this.pt; node != nil; node = node.prev {
+		if !fn(node.elem) {
+			break
 		}
 	}
 }

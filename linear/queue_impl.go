@@ -86,10 +86,6 @@ func (this *queue) Contains(v interface{}) bool {
 }
 
 func (this *queue) Iterator(fn func(interface{}) bool) {
-	if this.size == 0 {
-		return
-	}
-
 	for node := this.head; node != nil; node = node.next {
 		if !fn(node.value) {
 			break
