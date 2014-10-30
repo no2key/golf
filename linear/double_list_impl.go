@@ -124,7 +124,7 @@ func (this *dLList) Contains(v interface{}) bool {
 	return rs
 }
 
-func (this *dLList) Iterator(fn func(interface{}) bool) {
+func (this *dLList) Travel(fn func(interface{}) bool) {
 	for node := this.head; node != nil; node = node.next {
 		if !fn(node.value) {
 			break
@@ -132,7 +132,7 @@ func (this *dLList) Iterator(fn func(interface{}) bool) {
 	}
 }
 
-func (this *dLList) ReverseIterator(fn func(interface{}) bool) {
+func (this *dLList) ReverseTravel(fn func(interface{}) bool) {
 	for node := this.tail; node != nil; node = node.prev {
 		if !fn(node.value) {
 			break

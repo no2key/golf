@@ -76,7 +76,7 @@ func (this *stack) Contains(v interface{}) bool {
 	return rs
 }
 
-func (this *stack) Iterator(fn func(interface{}) bool) {
+func (this *stack) Travel(fn func(interface{}) bool) {
 	for node := this.pt; node != nil; node = node.prev {
 		if !fn(node.elem) {
 			break
@@ -84,7 +84,7 @@ func (this *stack) Iterator(fn func(interface{}) bool) {
 	}
 }
 
-func (this *stack) ReverseIterator(fn func(interface{}) bool) {
+func (this *stack) ReverseTravel(fn func(interface{}) bool) {
 	if this.size > 0 {
 		nodeSlice := make([]interface{}, this.size)
 		for node, i := this.pt, this.size-1; node != nil && i >= 0; node, i = node.prev, i-1 {

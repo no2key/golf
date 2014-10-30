@@ -85,7 +85,7 @@ func (this *queue) Contains(v interface{}) bool {
 	return rs
 }
 
-func (this *queue) Iterator(fn func(interface{}) bool) {
+func (this *queue) Travel(fn func(interface{}) bool) {
 	for node := this.head; node != nil; node = node.next {
 		if !fn(node.value) {
 			break
@@ -93,7 +93,7 @@ func (this *queue) Iterator(fn func(interface{}) bool) {
 	}
 }
 
-func (this *queue) ReverseIterator(fn func(interface{}) bool) {
+func (this *queue) ReverseTravel(fn func(interface{}) bool) {
 	if this.size == 0 {
 		return
 	}

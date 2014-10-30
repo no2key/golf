@@ -8,6 +8,6 @@ type SLList interface {
 	Remove() interface{}
 	Peek() interface{}
 	Contains(v interface{}) bool
-	Iterator(fn func(interface{}) bool)
-	ReverseIterator(fn func(interface{}) bool)
+	Travel(fn func(interface{}) bool)
+	ReverseTravel(fn func(interface{}) bool)
 }
