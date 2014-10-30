@@ -139,7 +139,7 @@ func (this *Tree) Remove(n *Node) {
 }
 
 // 广度优先遍历非递归版本
-func (this *Tree) Interator(fn func(interface{}) bool) {
+func (this *Tree) Interator(fn func(*Node) bool) {
 	if this.root == nil {
 		return
 	}
@@ -150,7 +150,7 @@ func (this *Tree) Interator(fn func(interface{}) bool) {
 
 	for !que.IsEmpty() {
 		node = que.Remove().(*Node)
-		if !fn(node.Value) {
+		if !fn(node) {
 			break
 		}
 		for n := node.child; n != nil; n = n.brother {
@@ -160,7 +160,7 @@ func (this *Tree) Interator(fn func(interface{}) bool) {
 }
 
 // 深度优先遍历递归版本
-func (this *Tree) interatorDeepRecursive(fn func(interface{}) bool) {
+func (this *Tree) interatorDeepRecursive(fn func(*Node) bool) {
 	defer func() {
 		tr := recover() // 如果没有异常这里应该返回 nil
 		if tr != nil && tr != jumpSignal {
@@ -170,12 +170,12 @@ func (this *Tree) interatorDeepRecursive(fn func(interface{}) bool) {
 	this.internalInteratorRecursive(this.root, fn)
 }
 
-func (this *Tree) internalInteratorRecursive(n *Node, fn func(interface{}) bool) {
+func (this *Tree) internalInteratorRecursive(n *Node, fn func(*Node) bool) {
 	if n == nil {
 		return
 	}
 
-	if !fn(n.Value) {
+	if !fn(n) {
 		panic(jumpSignal) // TODO 跳出递归的方式非得使用 panic 吗？
 	}
 
@@ -185,7 +185,7 @@ func (this *Tree) internalInteratorRecursive(n *Node, fn func(interface{}) bool)
 }
 
 // 深度优先遍历非递归版本
-func (this *Tree) interatorDeep(fn func(interface{}) bool) {
+func (this *Tree) interatorDeep(fn func(*Node) bool) {
 	if this.root == nil {
 		return
 	}
@@ -200,7 +200,7 @@ func (this *Tree) interatorDeep(fn func(interface{}) bool) {
 			continue
 		}
 
-		if !fn(node.Value) {
+		if !fn(node) {
 			break
 		}
 

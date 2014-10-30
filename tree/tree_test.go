@@ -23,8 +23,8 @@ func TestInterator(t *testing.T) {
 
 	node7.AddChild(10)
 
-	tr.Interator(func(v interface{}) bool {
-		t.Log(v)
+	tr.Interator(func(n *Node) bool {
+		t.Log(n.Value)
 		return true
 	})
 }
@@ -47,8 +47,8 @@ func TestInteratorDeepRecursive(t *testing.T) {
 
 	node7.AddChild(10)
 
-	tr.interatorDeepRecursive(func(v interface{}) bool {
-		t.Log(v)
+	tr.interatorDeepRecursive(func(n *Node) bool {
+		t.Log(n.Value)
 		return true
 	})
 }
@@ -71,8 +71,8 @@ func TestInteratorDeep(t *testing.T) {
 
 	node7.AddChild(10)
 
-	tr.interatorDeep(func(v interface{}) bool {
-		t.Log(v)
+	tr.interatorDeep(func(n *Node) bool {
+		t.Log(n.Value)
 		return true
 	})
 }
