@@ -24,6 +24,14 @@ func (this *Node) String() string {
 	return fmt.Sprintf("[%d, %d]: %v", this.depth, this.horizontal, this.Value)
 }
 
+func (this *Node) GetDepth() int {
+	return this.depth
+}
+
+func (this *Node) GetBrotherIndex() int {
+	return this.horizontal
+}
+
 func (this *Node) clear() {
 	this.brother = nil
 	this.child = nil
