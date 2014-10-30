@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestInterator(t *testing.T) {
+func TestBreadthFirstTravel(t *testing.T) {
 	tr := NewTree()
 	root := tr.AddRoot(1)
 
@@ -23,7 +23,7 @@ func TestInterator(t *testing.T) {
 
 	node7.AddChild(10)
 
-	tr.Interator(func(n *Node) bool {
+	tr.BreadthFirstTravel(func(n *Node) bool {
 		t.Log(n.Value)
 		return true
 	})
@@ -53,7 +53,7 @@ func TestInteratorDeepRecursive(t *testing.T) {
 	})
 }
 
-func TestInteratorDeep(t *testing.T) {
+func TestDepthFirstTravel(t *testing.T) {
 	tr := NewTree()
 	root := tr.AddRoot(1)
 
@@ -71,7 +71,7 @@ func TestInteratorDeep(t *testing.T) {
 
 	node7.AddChild(10)
 
-	tr.interatorDeep(func(n *Node) bool {
+	tr.DepthFirstTravel(func(n *Node) bool {
 		t.Log(n.Value)
 		return true
 	})

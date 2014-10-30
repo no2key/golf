@@ -147,7 +147,7 @@ func (this *Tree) Remove(n *Node) {
 }
 
 // 广度优先遍历非递归版本
-func (this *Tree) Interator(fn func(*Node) bool) {
+func (this *Tree) BreadthFirstTravel(fn func(*Node) bool) {
 	if this.root == nil {
 		return
 	}
@@ -193,7 +193,7 @@ func (this *Tree) internalInteratorRecursive(n *Node, fn func(*Node) bool) {
 }
 
 // 深度优先遍历非递归版本
-func (this *Tree) interatorDeep(fn func(*Node) bool) {
+func (this *Tree) DepthFirstTravel(fn func(*Node) bool) {
 	if this.root == nil {
 		return
 	}
