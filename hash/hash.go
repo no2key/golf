@@ -1,5 +1,5 @@
 // hash
-package hashmap
+package hash
 
 type Hash interface {
 	HashCode() uint32

@@ -1,5 +1,5 @@
 // hash_impl
-package hashmap
+package hash
 
 import (
 	"errors"
@@ -217,7 +217,7 @@ func roundUpToPowerOfTwo(i int) int {
 	return i + 1
 }
 
-func NewSizedHashMap(capacity int) Map {
+func newSizedHashMap(capacity int) *hashMap {
 	newMap := new(hashMap)
 	if capacity < _MINIMUM_CAPACITY {
 		capacity = _MINIMUM_CAPACITY
@@ -228,4 +228,16 @@ func NewSizedHashMap(capacity int) Map {
 	}
 	newMap.makeTable(capacity)
 	return newMap
+}
+
+func newHashMap() *hashMap {
+	return newSizedHashMap(16)
+}
+
+func NewSizedHashMap(capacity int) Map {
+	return newSizedHashMap(capacity)
+}
+
+func NewHashMap() Map {
+	return newHashMap()
 }
