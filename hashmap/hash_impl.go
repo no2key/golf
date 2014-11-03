@@ -89,11 +89,40 @@ func (this *hashMap) Get(h Hash) (interface{}, error) {
 	return nil, nil
 }
 
-func (this *hashMap) Remove(h Hash) interface{} {
-	return nil
+func (this *hashMap) Remove(h Hash) (interface{}, error) {
+	if h == nil {
+		return nil, paramIsNilError
+	}
+	hash := secondaryHash(h)
+	tab := this.table
+	index := int(hash) & (len(tab) - 1)
+	var prev, e *hashMapEntry
+	for e, prev = tab[index], nil; e != nil; prev, e = e, e.next {
+		if e.hash == hash || h.Equals(e.key) {
+			if prev == nil {
+				tab[index] = e.next
+			} else {
+				prev.next = e.next
+			}
+			this.size--
+			return e.value, nil
+		}
+	}
+	return nil, nil
 }
 
 func (this *hashMap) Contains(h Hash) bool {
+	if h == nil {
+		return false
+	}
+	hash := secondaryHash(h)
+	tab := this.table
+	for e := tab[int(hash)&(len(tab)-1)]; e != nil; e = e.next {
+		key := e.key
+		if key == h || (e.hash == hash && h.Equals(e.key)) {
+			return true
+		}
+	}
 	return false
 }
 
@@ -106,9 +135,16 @@ func (this *hashMap) IsEmpty() bool {
 }
 
 func (this *hashMap) Clear() {
+	if this.size != 0 {
+		for i, _ := range this.table {
+			this.table[i] = nil
+			this.size = 0
+		}
+	}
 }
 
 func (this *hashMap) Travel(func(MapEntry) bool) {
+	panic("Not support now!")
 }
 
 func (this *hashMap) addNewEntry(h Hash, v interface{}, hash uint32, index uint32) {
@@ -168,6 +204,28 @@ func secondaryHash(h Hash) uint32 {
 	return rs
 }
 
-func NewMap() Map {
-	return new(hashMap)
+func roundUpToPowerOfTwo(i int) int {
+	i-- // If input is a power of two, shift its high-order bit right.
+
+	// "Smear" the high-order bit all the way to the right.
+	i |= i >> 1
+	i |= i >> 2
+	i |= i >> 4
+	i |= i >> 8
+	i |= i >> 16
+
+	return i + 1
+}
+
+func NewSizedHashMap(capacity int) Map {
+	newMap := new(hashMap)
+	if capacity < _MINIMUM_CAPACITY {
+		capacity = _MINIMUM_CAPACITY
+	} else if capacity > _MAXIMUM_CAPACITY {
+		capacity = _MAXIMUM_CAPACITY
+	} else {
+		capacity = roundUpToPowerOfTwo(capacity)
+	}
+	newMap.makeTable(capacity)
+	return newMap
 }

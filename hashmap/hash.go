@@ -16,7 +16,7 @@ type Map interface {
 
 	Get(h Hash) (interface{}, error)
 
-	Remove(h Hash) interface{}
+	Remove(h Hash) (interface{}, error)
 
 	Contains(h Hash) bool
 
