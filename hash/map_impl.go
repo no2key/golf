@@ -2,17 +2,8 @@
 package hash
 
 import (
-	"errors"
+	"bytes"
 	"fmt"
-)
-
-var (
-	paramIsNilError = errors.New("the param is nil")
-)
-
-const (
-	_MINIMUM_CAPACITY = 4
-	_MAXIMUM_CAPACITY = 1 << 30
 )
 
 type hashMapEntry struct {
@@ -143,8 +134,25 @@ func (this *hashMap) Clear() {
 	}
 }
 
-func (this *hashMap) Travel(func(MapEntry) bool) {
-	panic("Not support now!")
+func (this *hashMap) Travel(fn func(MapEntry) bool) {
+	if this.size != 0 {
+		tab := this.table
+		var rs bool
+
+		for _, entry := range tab {
+			if entry == nil {
+				continue
+			}
+
+			for n := entry; n != nil; n = n.next {
+				rs = fn(n)
+			}
+
+			if !rs {
+				break
+			}
+		}
+	}
 }
 
 func (this *hashMap) addNewEntry(h Hash, v interface{}, hash uint32, index uint32) {
@@ -215,6 +223,22 @@ func roundUpToPowerOfTwo(i int) int {
 	i |= i >> 16
 
 	return i + 1
+}
+
+func (this *hashMap) String() string {
+	buf := bytes.NewBuffer(nil)
+	buf.WriteString("map [")
+	index := -1
+	this.Travel(func(e MapEntry) bool {
+		index++
+		if index != 0 {
+			buf.WriteString(", ")
+		}
+		buf.WriteString(fmt.Sprintf("%v", e))
+		return true
+	})
+	buf.WriteString("]")
+	return buf.String()
 }
 
 func newSizedHashMap(capacity int) *hashMap {
