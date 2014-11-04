@@ -7,11 +7,11 @@ type MapEntry interface {
 }
 
 type Map interface {
-	Put(h Hash, v interface{}) (interface{}, error)
+	Put(h Hash, v interface{}) interface{}
 
-	Get(h Hash) (interface{}, error)
+	Get(h Hash) interface{}
 
-	Remove(h Hash) (interface{}, error)
+	Remove(h Hash) interface{}
 
 	Contains(h Hash) bool
 

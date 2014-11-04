@@ -39,11 +39,15 @@ type hashMap struct {
 	table     []*hashMapEntry
 	size      int
 	threshold int
+	// key = nil 时的值
+	nilVal interface{}
 }
 
-func (this *hashMap) Put(h Hash, v interface{}) (interface{}, error) {
+func (this *hashMap) Put(h Hash, v interface{}) interface{} {
 	if h == nil {
-		return nil, paramIsNilError
+		prev := this.nilVal
+		this.nilVal = v
+		return prev
 	}
 	hash := secondaryHash(h)
 	index := hash & (uint32(len(this.table)) - 1)
@@ -52,37 +56,39 @@ func (this *hashMap) Put(h Hash, v interface{}) (interface{}, error) {
 		if entry.hash == hash && h.Equals(entry.key) {
 			rs := entry.value
 			entry.value = v
-			return rs, nil
+			return rs
 		}
 	}
 	// 新值
 	if this.size > this.threshold {
-		this.size++
 		tab := this.doubleCapacity()
 		index = hash & (uint32(len(tab) - 1))
 	}
+	this.size++
 	this.addNewEntry(h, v, hash, index)
-	return nil, nil
+	return nil
 }
 
-func (this *hashMap) Get(h Hash) (interface{}, error) {
+func (this *hashMap) Get(h Hash) interface{} {
 	if h == nil {
-		return nil, paramIsNilError
+		return this.nilVal
 	}
 	hash := secondaryHash(h)
 	tab := this.table
 	for e := this.table[int(hash)&(len(tab)-1)]; e != nil; e = e.next {
 		key := e.key
 		if key == h || (e.hash == hash && h.Equals(key)) {
-			return e.value, nil
+			return e.value
 		}
 	}
-	return nil, nil
+	return nil
 }
 
-func (this *hashMap) Remove(h Hash) (interface{}, error) {
+func (this *hashMap) Remove(h Hash) interface{} {
 	if h == nil {
-		return nil, paramIsNilError
+		oldV := this.nilVal
+		this.nilVal = nil
+		return oldV
 	}
 	hash := secondaryHash(h)
 	tab := this.table
@@ -96,10 +102,10 @@ func (this *hashMap) Remove(h Hash) (interface{}, error) {
 				prev.next = e.next
 			}
 			this.size--
-			return e.value, nil
+			return e.value
 		}
 	}
-	return nil, nil
+	return nil
 }
 
 func (this *hashMap) Contains(h Hash) bool {
