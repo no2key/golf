@@ -1,4 +1,4 @@
-package linear
+package list
 
 type SLList interface {
 	IsEmpty() bool

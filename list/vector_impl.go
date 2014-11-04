@@ -1,4 +1,4 @@
-package linear
+package list
 
 func NewVector() RAList {
 	return newVector()

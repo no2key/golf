@@ -1,5 +1,5 @@
 // vector_test.go
-package linear
+package list
 
 import (
 	"testing"

@@ -1,5 +1,5 @@
 // linked_list
-package linear
+package list
 
 type DLList interface {
 	AddTail(v interface{})

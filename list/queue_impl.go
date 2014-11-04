@@ -1,5 +1,5 @@
 // queue_impl
-package linear
+package list
 
 func NewQueue() SLList {
 	return newQueue()

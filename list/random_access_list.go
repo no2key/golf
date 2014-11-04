@@ -1,4 +1,4 @@
-package linear
+package list
 
 type RAList interface {
 	Add(v interface{})

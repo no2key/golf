@@ -1,5 +1,5 @@
 // errors
-package linear
+package list
 
 import (
 	"errors"

@@ -1,5 +1,5 @@
 // double_list_impl
-package linear
+package list
 
 func NewDoubleLinkedList() DLList {
 	return new(dLList)
