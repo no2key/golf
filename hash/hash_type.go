@@ -252,3 +252,65 @@ func (this Float64Hash) Equals(h Hash) bool {
 func Float64(n float64) Hash {
 	return Float64Hash(n)
 }
+
+// complex64
+type Complex64Hash complex64
+
+func (this Complex64Hash) HashCode() uint32 {
+	return HashComplex64(5, complex64(this))
+}
+
+func (this Complex64Hash) Equals(h Hash) bool {
+	if v, ok := h.(Complex64Hash); ok {
+		this_r := real(this)
+		this_i := imag(this)
+		v_r := real(v)
+		v_i := imag(v)
+		return this_r-v_r < _MIN_FLOAT_VALUE_ && this_r-v_r > -_MIN_FLOAT_VALUE_ && this_i-v_i < _MIN_FLOAT_VALUE_ && this_i-v_i > -_MIN_FLOAT_VALUE_
+	}
+	return false
+}
+
+func Complex64(n complex64) Hash {
+	return Complex64Hash(n)
+}
+
+// complex128
+type Complex128Hash complex128
+
+func (this Complex128Hash) HashCode() uint32 {
+	return HashComplex128(5, complex128(this))
+}
+
+func (this Complex128Hash) Equals(h Hash) bool {
+	if v, ok := h.(Complex128Hash); ok {
+		this_r := real(this)
+		this_i := imag(this)
+		v_r := real(v)
+		v_i := imag(v)
+		return this_r-v_r < _MIN_FLOAT_VALUE_ && this_r-v_r > -_MIN_FLOAT_VALUE_ && this_i-v_i < _MIN_FLOAT_VALUE_ && this_i-v_i > -_MIN_FLOAT_VALUE_
+	}
+	return false
+}
+
+func Complex128(n complex128) Hash {
+	return Complex128Hash(n)
+}
+
+// string
+type StringHash string
+
+func (this StringHash) HashCode() uint32 {
+	return HashString(5, string(this))
+}
+
+func (this StringHash) Equals(h Hash) bool {
+	if v, ok := h.(StringHash); ok {
+		return this == v
+	}
+	return false
+}
+
+func String(s string) Hash {
+	return StringHash(s)
+}
