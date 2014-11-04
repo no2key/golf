@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/wdsgyj/golf/linear"
+	"github.com/wdsgyj/golf/list"
 )
 
 var jumpSignal = errors.New("跳出递归时需要")
@@ -152,7 +152,7 @@ func (this *Tree) BreadthFirstTravel(fn func(*Node) bool) {
 		return
 	}
 
-	que := linear.NewQueue()
+	que := list.NewQueue()
 	que.Add(this.root)
 	var node *Node
 
@@ -198,7 +198,7 @@ func (this *Tree) DepthFirstTravel(fn func(*Node) bool) {
 		return
 	}
 
-	stack := linear.NewStack()
+	stack := list.NewStack()
 	var node *Node
 
 	stack.Add(this.root)
