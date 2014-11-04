@@ -1,6 +1,10 @@
 // hash_func
 package hash
 
+import (
+	"fmt"
+)
+
 func HashInt(code uint32, n int) uint32 {
 	return 53*code + uint32(n)
 }
@@ -54,19 +58,27 @@ func HashUInt64(code uint32, n uint64) uint32 {
 }
 
 func HashFloat32(code uint32, f float32) uint32 {
-	panic("not support")
+	s := fmt.Sprintf("%f", f)
+	return HashString(code, s)
 }
 
 func HashFloat64(code uint32, f float64) uint32 {
-	panic("not support")
+	s := fmt.Sprintf("%f", f)
+	return HashString(code, s)
 }
 
 func HashComplex64(code uint32, cpx complex64) uint32 {
-	panic("not support")
+	s := fmt.Sprintf("%f", real(cpx))
+	code = HashString(code, s)
+	s = fmt.Sprintf("%f", imag(cpx))
+	return HashString(code, s)
 }
 
 func HashComplex128(code uint32, cpx complex128) uint32 {
-	panic("not support")
+	s := fmt.Sprintf("%f", real(cpx))
+	code = HashString(code, s)
+	s = fmt.Sprintf("%f", imag(cpx))
+	return HashString(code, s)
 }
 
 func HashString(code uint32, s string) uint32 {
