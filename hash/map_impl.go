@@ -32,7 +32,7 @@ func (this *hashMapEntry) Value() interface{} {
 }
 
 func (this *hashMapEntry) String() string {
-	return fmt.Sprintf("%v: %v", this.key, this.value)
+	return fmt.Sprintf("%v->%v", this.key, this.value)
 }
 
 type hashMap struct {
@@ -40,13 +40,21 @@ type hashMap struct {
 	size      int
 	threshold int
 	// key = nil 时的值
-	nilVal interface{}
+	nilEntry *hashMapEntry
+}
+
+func (this *hashMap) initNilEntry() {
+	if this.nilEntry == nil {
+		this.nilEntry = new(hashMapEntry)
+		this.size++
+	}
 }
 
 func (this *hashMap) Put(h Hash, v interface{}) interface{} {
 	if h == nil {
-		prev := this.nilVal
-		this.nilVal = v
+		this.initNilEntry()
+		prev := this.nilEntry.value
+		this.nilEntry.value = v
 		return prev
 	}
 	hash := secondaryHash(h)
@@ -71,7 +79,11 @@ func (this *hashMap) Put(h Hash, v interface{}) interface{} {
 
 func (this *hashMap) Get(h Hash) interface{} {
 	if h == nil {
-		return this.nilVal
+		if this.nilEntry != nil {
+			return this.nilEntry.value
+		} else {
+			return nil
+		}
 	}
 	hash := secondaryHash(h)
 	tab := this.table
@@ -86,8 +98,12 @@ func (this *hashMap) Get(h Hash) interface{} {
 
 func (this *hashMap) Remove(h Hash) interface{} {
 	if h == nil {
-		oldV := this.nilVal
-		this.nilVal = nil
+		var oldV interface{}
+		if this.nilEntry != nil {
+			oldV = this.nilEntry.value
+			this.nilEntry = nil
+			this.size--
+		}
 		return oldV
 	}
 	hash := secondaryHash(h)
@@ -110,7 +126,7 @@ func (this *hashMap) Remove(h Hash) interface{} {
 
 func (this *hashMap) Contains(h Hash) bool {
 	if h == nil {
-		return false
+		return this.nilEntry != nil
 	}
 	hash := secondaryHash(h)
 	tab := this.table
@@ -137,6 +153,7 @@ func (this *hashMap) Clear() {
 			this.table[i] = nil
 			this.size = 0
 		}
+		this.nilEntry = nil
 	}
 }
 
@@ -144,6 +161,12 @@ func (this *hashMap) Travel(fn func(MapEntry) bool) {
 	if this.size != 0 {
 		tab := this.table
 		var rs bool
+
+		if this.nilEntry != nil {
+			if !fn(this.nilEntry) {
+				return
+			}
+		}
 
 		for _, entry := range tab {
 			if entry == nil {

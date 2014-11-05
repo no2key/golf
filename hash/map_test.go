@@ -6,6 +6,31 @@ import (
 	"testing"
 )
 
+func TestNilKeyMap(t *testing.T) {
+	m := NewHashMap()
+	if m.Size() != 0 {
+		t.Fatal("NewHashMap 函数测试失败")
+	}
+
+	m.Put(nil, 100)
+
+	if m.Size() != 1 {
+		t.Fatal("Put 函数测试失败")
+	}
+
+	if m.Get(nil).(int) != 100 {
+		t.Fatal("Get 函数测试失败")
+	}
+
+	if m.Remove(nil).(int) != 100 {
+		t.Fatal("Remove 函数测试失败")
+	}
+
+	if m.Size() != 0 {
+		t.Fatal("Size 函数测试失败")
+	}
+}
+
 func TestIntMap(t *testing.T) {
 	m1 := make(map[int]string, 100)
 	m2 := NewSizedHashMap(100)
