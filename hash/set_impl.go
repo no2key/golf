@@ -1,48 +1,50 @@
 // set_impl
 package hash
 
-type hashSetEntry struct {
-	key  Hash
-	hash uint32
-	next *hashMapEntry
-}
-
-func newHashSetEntry(key Hash, hash uint32, next *hashMapEntry) *hashMapEntry {
-	rs := new(hashMapEntry)
-	rs.key = key
-	rs.hash = hash
-	rs.next = next
-	return rs
-}
-
 type hashSet struct {
-	table     []*hashSetEntry
-	size      int
-	threshold int
+	internalMap Map
+}
+
+func newSizedHashSet(capacity int) *hashSet {
+	set := new(hashSet)
+	set.internalMap = NewSizedHashMap(capacity)
+	return set
+}
+
+func NewSizedHashSet(capacity int) Set {
+	return newSizedHashSet(capacity)
+}
+
+func NewHashSet() Set {
+	return newSizedHashSet(16)
 }
 
 func (this *hashSet) Size() int {
-	return this.size
+	return this.internalMap.Size()
 }
 
 func (this *hashSet) IsEmpty() bool {
-	return this.size == 0
+	return this.internalMap.IsEmpty()
 }
 
 func (this *hashSet) Add(h Hash) bool {
-	return false
+	return this.internalMap.Put(h, this) == nil
 }
 
 func (this *hashSet) Remove(h Hash) bool {
-	return false
+	return this.internalMap.Remove(h) != nil
 }
 
 func (this *hashSet) Contains(h Hash) bool {
-	return false
+	return this.Contains(h)
 }
 
 func (this *hashSet) Clear() {
+	this.internalMap.Clear()
 }
 
 func (this *hashSet) Travel(fn func(Hash) bool) {
+	this.internalMap.Travel(func(e MapEntry) bool {
+		return fn(e.Key())
+	})
 }

@@ -283,14 +283,10 @@ func newSizedHashMap(capacity int) *hashMap {
 	return newMap
 }
 
-func newHashMap() *hashMap {
-	return newSizedHashMap(16)
-}
-
 func NewSizedHashMap(capacity int) Map {
 	return newSizedHashMap(capacity)
 }
 
 func NewHashMap() Map {
-	return newHashMap()
+	return newSizedHashMap(16)
 }
