@@ -2,19 +2,27 @@
 package weak
 
 import (
+	"errors"
+	"reflect"
 	"runtime"
 	"sync/atomic"
 	"unsafe"
 )
 
-type WeakRef struct {
+var notPointerError = errors.New("Not a pointer")
+
+type Ref struct {
 	t uintptr // Type
 	d uintptr // Data
 }
 
-func NewWeakRef(v interface{}) *WeakRef {
+func New(v interface{}) *Ref {
+	// not include reflect.UnsafePointer Kind
+	if reflect.TypeOf(v).Kind() != reflect.Ptr {
+		panic(notPointerError)
+	}
 	i := (*[2]uintptr)(unsafe.Pointer(&v))
-	w := &WeakRef{^i[0], ^i[1]}
+	w := &Ref{^i[0], ^i[1]}
 	runtime.SetFinalizer((*uintptr)(unsafe.Pointer(i[1])), func(_ *uintptr) {
 		atomic.StoreUintptr(&w.d, 0)
 		w.t = 0
@@ -22,10 +30,9 @@ func NewWeakRef(v interface{}) *WeakRef {
 	return w
 }
 
-func (w *WeakRef) Get() (v interface{}) {
+func (w *Ref) Get() (v interface{}) {
 	t := w.t
-	d := atomic.LoadUintptr(&w.d)
-	if d != 0 {
+	if d := atomic.LoadUintptr(&w.d); d != 0 {
 		i := (*[2]uintptr)(unsafe.Pointer(&v))
 		i[0] = ^t
 		i[1] = ^d
