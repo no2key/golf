@@ -21,7 +21,7 @@ func New(v interface{}) *Ref {
 	if reflect.TypeOf(v).Kind() != reflect.Ptr {
 		panic(notPointerError)
 	}
-	i := (*[2]uintptr)(unsafe.Pointer(&v))
+	i := reflect.ValueOf(&v).Elem().InterfaceData()
 	w := &Ref{^i[0], ^i[1]}
 	runtime.SetFinalizer((*uintptr)(unsafe.Pointer(i[1])), func(_ *uintptr) {
 		atomic.StoreUintptr(&w.d, 0)
